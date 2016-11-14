@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 # Jacqueline Kory Westlund
+# Caitlyn Elise Clabaugh
 # August 2016
 #
 # The MIT License (MIT)
@@ -44,14 +45,15 @@ def game_command_sender():
             choices=['start', 's', 'continue', 'c', 'pause', 'p', 'end', 'e',
                 'wait', 'w', 'skip', 'k'], help="Specify the command to send.")
     # Specify game to send message to.
-    parser.add_argument('-g', '--game', dest='game', nargs='+', type=str,
-            choices=['storytelling', 's'], default='s',
+    parser.add_argument('-g', '--game', dest='game', type=str, nargs='+',
+            choices=['storytelling', 's', 'rocket_barrier', 'r',
+                'galactic_traveler', 'g', 'spaceship_tidyup', 't',
+                'alien_codes', 'a'], default='s',
             help="Which game to send the message to.")
     # START commands should be accompanied by an integer specifying
     # which level the game should start at.
-    parser.add_argument('-l', '--level', dest='level', action='append',
-            nargs=1, type=int, default=1,
-            help="The level the game should start at.")
+    parser.add_argument('-l', '--level', dest='level', type=int, nargs=1,
+            default=1, help="The level the game should start at.")
 
     args = parser.parse_args()
     print(args)
@@ -87,12 +89,21 @@ def game_command_sender():
 
     # Check whether we were given a level or not.
     if args.level:
-        msg.level = args.level
+        msg.level = args.level[0]
 
     # Determine which game to send to.
     if args.game:
-        if args.game == 'storytelling' or args.game == 's':
+        game = args.game[0]
+        if game == 'storytelling' or game == 's':
             msg.game = GameCommand.STORYTELLING
+        elif game == 'rocket_barrier' or game == 'r':
+            msg.game = GameCommand.ROCKET_BARRIER
+        elif game == 'galactic_traveler' or game == 'g':
+            msg.game = GameCommand.GALACTIC_TRAVELER
+        elif game == 'spaceship_tidyup' or game == 't':
+            msg.game = GameCommand.SPACESHIP_TIDYUP
+        elif game == 'alien_codes' or game == 'a':
+            msg.game = GameCommand.ALIEN_CODES
 
     # Send message.
     pub.publish(msg)
